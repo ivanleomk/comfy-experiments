@@ -11,7 +11,11 @@ image = (
 )
 
 # Download custom nodes
-image = image.run_commands("comfy node install was-node-suite-comfyui")
+image = image.run_commands(
+    "comfy node install was-node-suite-comfyui"
+).run_commands(  # needs to be empty for Volume mount to work
+    "rm -rf /root/comfy/ComfyUI/models"
+)
 
 app = modal.App(name="example-comfyui", image=image)
 
@@ -25,7 +29,7 @@ vol = modal.Volume.from_name("comfyui-models", create_if_missing=True)
     concurrency_limit=1,
     container_idle_timeout=30,
     timeout=1800,
-    gpu="A10G",
+    gpu="A100",
     volumes={"/root/comfy/ComfyUI/models": vol},
 )
 @modal.web_server(8000, startup_timeout=60)

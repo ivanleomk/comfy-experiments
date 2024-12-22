@@ -7,7 +7,7 @@ image = (
     .run_commands("rm -rf /root/comfy/ComfyUI/models")
 )
 
-app = modal.App(name="example-comfyui", image=image)
+app = modal.App(name="comfyui-models", image=image)
 
 # Set up model storage
 vol = modal.Volume.from_name("comfyui-models", create_if_missing=True)

@@ -13,9 +13,13 @@ image = (
     .run_commands("comfy --skip-prompt install --nvidia")
 )
 
-image = image.run_commands("comfy node install was-node-suite-comfyui")
+image = image.run_commands(
+    "comfy node install was-node-suite-comfyui"
+).run_commands(  # needs to be empty for Volume mount to work
+    "rm -rf /root/comfy/ComfyUI/models"
+)
 
-app = modal.App(name="example-comfyui", image=image)
+app = modal.App(name="comfyui-api", image=image)
 
 vol = modal.Volume.from_name("comfyui-models", create_if_missing=True)
 
@@ -73,3 +77,25 @@ class ComfyUI:
 
         img_bytes = self.infer.local(new_workflow_file)
         return Response(img_bytes, media_type="image/jpeg")
+
+    @modal.web_endpoint(method="POST")
+    def video_api(self, item: Dict):
+        from fastapi import Response
+
+        workflow_data = json.loads((Path(__file__).parent / "ltx.json").read_text())
+
+        # insert the prompt
+        workflow_data["6"]["inputs"]["text"] = item["prompt"]
+
+        # give the output video a unique id per client request
+        client_id = uuid.uuid4().hex
+        workflow_data["41"]["inputs"]["filename_prefix"] = client_id
+
+        # save this updated workflow to a new file
+        new_workflow_file = f"{client_id}.json"
+        json.dump(workflow_data, Path(new_workflow_file).open("w"))
+
+        # run inference on the currently running container
+        video_bytes = self.infer.local(new_workflow_file)
+
+        return Response(video_bytes, media_type="video/webp")
