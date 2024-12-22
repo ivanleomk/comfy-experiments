@@ -1,0 +1,95 @@
+{
+  "6": {
+    "inputs": {
+      "text": "This is a scene reminiscent of \"Arrival\" (2016) in its cerebral and atmospheric intensity, mixed with the alien aesthetic of \"Annihilation\" (2018). The linguist, framed in a wide shot, stands before a colossal obsidian monolith embedded with shifting, iridescent symbols that pulsate like a heartbeat. The environment is bathed in dim, ambient light, cast by the faintly glowing crystalline structures towering in the background. Dust motes float lazily in the heavy air, occasionally caught by beams of refracted light. The soundscape is filled with an unsettling hum, a mix of distant alien machinery and an electric undertone. The camera focuses on the linguist’s face, their expression a blend of awe and apprehension, as the symbols realign themselves with fluid, liquid-like motion. Every detail — from the texture of the monolith’s surface, shimmering with faint microfractures, to the subtle tremor in the linguist’s hand as they reach out — conveys the stakes of unraveling this alien message.",
+      "clip": ["38", 0]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "7": {
+    "inputs": {
+      "text": "lowres, text, error, cropped, worst quality, low quality, jpeg artifacts, ugly, duplicate, morbid, mutilated, out of frame, extra fingers, mutated hands, poorly drawn hands, poorly drawn face, mutation, deformed, blurry, dehydrated, bad anatomy, bad proportions, extra limbs, cloned face, disfigured, gross proportions, malformed limbs, missing arms, missing legs, extra arms, extra legs, fused fingers, too many fingers, long neck, username, watermark, signature",
+      "clip": ["38", 0]
+    },
+    "class_type": "CLIPTextEncode"
+  },
+  "8": {
+    "inputs": {
+      "samples": ["72", 0],
+      "vae": ["44", 2]
+    },
+    "class_type": "VAEDecode"
+  },
+  "38": {
+    "inputs": {
+      "clip_name": "split_files/text_encoders/t5xxl_fp16.safetensors",
+      "type": "ltxv"
+    },
+    "class_type": "CLIPLoader"
+  },
+  "41": {
+    "inputs": {
+      "filename_prefix": "ComfyUI",
+      "fps": 45,
+      "lossless": false,
+      "quality": 100,
+      "method": "fastest",
+      "images": ["8", 0]
+    },
+    "class_type": "SaveAnimatedWEBP"
+  },
+  "44": {
+    "inputs": {
+      "ckpt_name": "ltx-video-2b-v0.9.safetensors"
+    },
+    "class_type": "CheckpointLoaderSimple"
+  },
+  "69": {
+    "inputs": {
+      "frame_rate": 45,
+      "positive": ["6", 0],
+      "negative": ["7", 0]
+    },
+    "class_type": "LTXVConditioning"
+  },
+  "70": {
+    "inputs": {
+      "width": 736,
+      "height": 512,
+      "length": 89,
+      "batch_size": 1
+    },
+    "class_type": "EmptyLTXVLatentVideo"
+  },
+  "71": {
+    "inputs": {
+      "steps": 45,
+      "max_shift": 2.05,
+      "base_shift": 0.9500000000000001,
+      "stretch": true,
+      "terminal": 0.1,
+      "latent": ["70", 0]
+    },
+    "class_type": "LTXVScheduler"
+  },
+  "72": {
+    "inputs": {
+      "add_noise": true,
+      "noise_seed": 656267593777700,
+      "cfg": 3,
+      "model": ["44", 0],
+      "positive": ["69", 0],
+      "negative": ["69", 1],
+      "sampler": ["73", 0],
+      "sigmas": ["71", 0],
+      "latent_image": ["70", 0]
+    },
+    "class_type": "SamplerCustom"
+  },
+  "73": {
+    "inputs": {
+      "sampler_name": "euler"
+    },
+    "class_type": "KSamplerSelect"
+  }
+}

@@ -1,0 +1,282 @@
+{
+  "last_node_id": 42,
+  "last_link_id": 86,
+  "nodes": [
+    {
+      "id": 8,
+      "type": "VAEDecode",
+      "pos": [1210, 190],
+      "size": [210, 46],
+      "flags": {},
+      "order": 7,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "samples",
+          "type": "LATENT",
+          "link": 35
+        },
+        {
+          "name": "vae",
+          "type": "VAE",
+          "link": 86
+        }
+      ],
+      "outputs": [
+        {
+          "name": "IMAGE",
+          "type": "IMAGE",
+          "links": [56],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAEDecode"
+      },
+      "widgets_values": []
+    },
+    {
+      "id": 28,
+      "type": "SaveAnimatedWEBP",
+      "pos": [1460, 190],
+      "size": [847.3048706054688, 602.0325317382812],
+      "flags": {},
+      "order": 8,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "images",
+          "type": "IMAGE",
+          "link": 56
+        }
+      ],
+      "outputs": [],
+      "properties": {},
+      "widgets_values": ["ComfyUI", 24, false, 90, "default", null]
+    },
+    {
+      "id": 40,
+      "type": "CheckpointLoaderSimple",
+      "pos": [-31, 174],
+      "size": [315, 98],
+      "flags": {},
+      "order": 0,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "MODEL",
+          "type": "MODEL",
+          "links": [81],
+          "slot_index": 0
+        },
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [],
+          "slot_index": 1
+        },
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [],
+          "slot_index": 2
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CheckpointLoaderSimple"
+      },
+      "widgets_values": ["all_in_one/mochi_preview_fp8_scaled.safetensors"]
+    },
+    {
+      "id": 6,
+      "type": "CLIPTextEncode",
+      "pos": [415, 186],
+      "size": [422.84503173828125, 164.31304931640625],
+      "flags": {},
+      "order": 5,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 85
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [46],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": [
+        "In a futuristic high-tech laboratory, the camera looks down from above, showing a woman dressed in an elegant evening gown conversing with a holographic avatar. The avatar is rendered with flowing lights and soft colors, accompanied by dynamic effects, creating an artistic and dreamlike atmosphere. The camera slowly rotates, capturing the subtle facial expressions of the avatar and the woman’s astonished reactions. In the background, glowing high-tech equipment and light effects highlight the modern aesthetics and visual impact of this virtual interaction."
+      ]
+    },
+    {
+      "id": 41,
+      "type": "CLIPLoader",
+      "pos": [-10.61119270324707, 393.4627990722656],
+      "size": [315, 82],
+      "flags": {},
+      "order": 1,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "CLIP",
+          "type": "CLIP",
+          "links": [84, 85],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPLoader"
+      },
+      "widgets_values": [
+        "split_files/text_encoders/t5xxl_fp16.safetensors",
+        "mochi"
+      ]
+    },
+    {
+      "id": 7,
+      "type": "CLIPTextEncode",
+      "pos": [413, 389],
+      "size": [425.27801513671875, 180.6060791015625],
+      "flags": {},
+      "order": 4,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "clip",
+          "type": "CLIP",
+          "link": 84
+        }
+      ],
+      "outputs": [
+        {
+          "name": "CONDITIONING",
+          "type": "CONDITIONING",
+          "links": [52],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "CLIPTextEncode"
+      },
+      "widgets_values": ["better videos"]
+    },
+    {
+      "id": 42,
+      "type": "VAELoader",
+      "pos": [154.03909301757812, -63.06855773925781],
+      "size": [315, 58],
+      "flags": {},
+      "order": 2,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "VAE",
+          "type": "VAE",
+          "links": [86],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "VAELoader"
+      },
+      "widgets_values": ["split_files/vae/mochi_vae.safetensors"]
+    },
+    {
+      "id": 21,
+      "type": "EmptyMochiLatentVideo",
+      "pos": [520, 620],
+      "size": [315, 130],
+      "flags": {},
+      "order": 3,
+      "mode": 0,
+      "inputs": [],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [38],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "EmptyMochiLatentVideo"
+      },
+      "widgets_values": [848, 480, 43, 1]
+    },
+    {
+      "id": 3,
+      "type": "KSampler",
+      "pos": [863, 187],
+      "size": [315, 262],
+      "flags": {},
+      "order": 6,
+      "mode": 0,
+      "inputs": [
+        {
+          "name": "model",
+          "type": "MODEL",
+          "link": 81
+        },
+        {
+          "name": "positive",
+          "type": "CONDITIONING",
+          "link": 46
+        },
+        {
+          "name": "negative",
+          "type": "CONDITIONING",
+          "link": 52
+        },
+        {
+          "name": "latent_image",
+          "type": "LATENT",
+          "link": 38
+        }
+      ],
+      "outputs": [
+        {
+          "name": "LATENT",
+          "type": "LATENT",
+          "links": [35],
+          "slot_index": 0
+        }
+      ],
+      "properties": {
+        "Node name for S&R": "KSampler"
+      },
+      "widgets_values": [2, "fixed", 30, 4.5, "euler", "simple", 1]
+    }
+  ],
+  "links": [
+    [35, 3, 0, 8, 0, "LATENT"],
+    [38, 21, 0, 3, 3, "LATENT"],
+    [46, 6, 0, 3, 1, "CONDITIONING"],
+    [52, 7, 0, 3, 2, "CONDITIONING"],
+    [56, 8, 0, 28, 0, "IMAGE"],
+    [81, 40, 0, 3, 0, "MODEL"],
+    [84, 41, 0, 7, 0, "CLIP"],
+    [85, 41, 0, 6, 0, "CLIP"],
+    [86, 42, 0, 8, 1, "VAE"]
+  ],
+  "groups": [],
+  "config": {},
+  "extra": {
+    "ds": {
+      "scale": 0.6060623678532417,
+      "offset": [785.6559957410308, 178.08393126097292]
+    }
+  },
+  "version": 0.4
+}
